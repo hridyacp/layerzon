@@ -1,0 +1,24 @@
+.mainHeader{
+    padding-left: 2%;
+    padding-right: 2%;
+    display: flex;
+    justify-content:flex-start;
+}
+.centerHeader{
+    font-size: medium;
+    padding-left: 40%;
+}
+.status{
+    background-color:#A77DFF;
+    padding:4px;
+    border-radius: 48px;
+    color: #42424B;
+    width: 100%;
+}
+.status-del{
+    background-color:#8AE06C;
+    padding:4px;
+    border-radius: 48px;
+    color: #42424B;
+    width: 100%;
+}
