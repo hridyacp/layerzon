@@ -8,6 +8,7 @@ import * as React from 'react';
     import TableRow from '@mui/material/TableRow';
     import Paper from '@mui/material/Paper';
 import './navigation.css';
+import { Navigate, useNavigate, useNavigation } from 'react-router-dom';
 
  
 const StyledTableCell = styled(TableCell)(() => ({
@@ -49,26 +50,30 @@ const StyledTableCell = styled(TableCell)(() => ({
 
   
     function createData(
-        name,
-        calories,
+        status,
         transactionhash,
-        carbs,
-        protein,
+        originChain,
+        destinationChain,
+        updatedDate,
+        transactionName
     ) {
-      return { name, calories, transactionhash, carbs, protein };
+      return { status, transactionhash, originChain, destinationChain, updatedDate,transactionName };
     }
     
     const rows = [
-      createData('PENDING', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 6.0, 24, 4.0),
-      createData('PENDING','0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 9.0, 37, 4.3),
-      createData('DELIVERED', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 16.0, 26, 6.0),
-      createData('DELIVERED', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 3.7, 67, 4.3),
-      createData('PENDING', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 8.0, 49, 3.9),
+      createData('PENDING', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 6.0, 24, "29 Sep, 2023","Cross chain message"),
+      createData('PENDING','0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 9.0, 37, "29 Sep, 2023","Cross chain message"),
+      createData('DELIVERED', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 16.0, 26, "29 Sep, 2023","Cross chain message"),
+      createData('DELIVERED', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 3.7, 67, "29 Sep, 2023","Cross chain message"),
+      createData('PENDING', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 8.0, 49, "29 Sep, 2023","Cross chain message"),
     ];
-    
+   
 function TableTransaction() {
+  const navigate= useNavigate();
     const getDetails=(row)=>{
-console.log(row,"row")
+      console.log(row,"row")
+ navigate('/detailPage',{state:{row:row}})
+
     }
       return (
         <TableContainer component={Paper}>
@@ -84,13 +89,13 @@ console.log(row,"row")
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <StyledTableRow key={row.carbs} onClick={()=>getDetails(row)}>
+                <StyledTableRow key={row.destinationChain} onClick={()=>getDetails(row)}>
                   <StyledTableCellStatus component="th" scope="row">
-                  <button className={row.name==='PENDING'?'status':'status-del'}>{row.name}</button>
+                  <button className={row.status==='PENDING'?'status':'status-del'}>{row.status}</button>
                   </StyledTableCellStatus>
-                  <StyledTableCell align="right">{row.calories}</StyledTableCell>
                   <StyledTableCell align="right">{row.transactionhash}</StyledTableCell>
-                  <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+                  <StyledTableCell align="right">{row.originChain}</StyledTableCell>
+                  <StyledTableCell align="right">{row.destinationChain}</StyledTableCell>
                   <StyledTableCell align="right">29 Sep, 2023</StyledTableCell>
                 </StyledTableRow>
               ))}
