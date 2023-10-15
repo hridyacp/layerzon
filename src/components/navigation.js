@@ -1,9 +1,14 @@
 import './navigation.css';
+import { Navigate, useNavigate, useNavigation } from 'react-router-dom';
 function Navigation() {
+  const navigate= useNavigate();
+  const getMainPage=()=>{      
+   navigate('/')
+  }
     return (
       <div className="mainHeader">
-         Ethonline
-         <div className='centerHeader'>Home</div>
+         ZKPHype
+         <div className='centerHeader' onClick={getMainPage}>Home</div>
          
       </div>
     );

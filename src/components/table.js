@@ -9,6 +9,7 @@ import * as React from 'react';
     import Paper from '@mui/material/Paper';
 import './navigation.css';
 import { Navigate, useNavigate, useNavigation } from 'react-router-dom';
+import moment from 'moment/moment';
 
  
 const StyledTableCell = styled(TableCell)(() => ({
@@ -47,40 +48,32 @@ const StyledTableCell = styled(TableCell)(() => ({
       border: 0,
     },
   }));
-
-  
-    function createData(
-        status,
-        transactionhash,
-        originChain,
-        destinationChain,
-        updatedDate,
-        transactionName
-    ) {
-      return { status, transactionhash, originChain, destinationChain, updatedDate,transactionName };
-    }
-    
-    const rows = [
-      createData('PENDING', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 6.0, 24, "29 Sep, 2023","Cross chain message"),
-      createData('PENDING','0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 9.0, 37, "29 Sep, 2023","Cross chain message"),
-      createData('DELIVERED', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 16.0, 26, "29 Sep, 2023","Cross chain message"),
-      createData('DELIVERED', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 3.7, 67, "29 Sep, 2023","Cross chain message"),
-      createData('PENDING', '0x6e2c4cf43fd18e00d5a6809f11e1e8b1e159bd5711b7600166382cbdd1a71117', 8.0, 49, "29 Sep, 2023","Cross chain message"),
-    ];
+ 
    
-function TableTransaction() {
+function TableTransaction({interchainTransactions}) {
   const navigate= useNavigate();
+  console.log(interchainTransactions,"row")
     const getDetails=(row)=>{
-      console.log(row,"row")
+     
  navigate('/detailPage',{state:{row:row}})
 
+    }
+
+    const truncateString=(str, num)=> {
+      // If the length of str is less than or equal to num
+      // just return str--don't truncate it.
+      if (str.length <= num) {
+        return str
+      }
+      // Return str truncated with '...' concatenated to the end of str.
+      return str.slice(0, num) + '...'
     }
       return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell>ZKP Hash</StyledTableCell>
                 <StyledTableCell align="right">Transactionhash</StyledTableCell>
                 <StyledTableCell align="right">Origin chain</StyledTableCell>
                 <StyledTableCell align="right">Destination chain</StyledTableCell>
@@ -88,17 +81,24 @@ function TableTransaction() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.destinationChain} onClick={()=>getDetails(row)}>
-                  <StyledTableCellStatus component="th" scope="row">
-                  <button className={row.status==='PENDING'?'status':'status-del'}>{row.status}</button>
-                  </StyledTableCellStatus>
-                  <StyledTableCell align="right">{row.transactionhash}</StyledTableCell>
-                  <StyledTableCell align="right">{row.originChain}</StyledTableCell>
-                  <StyledTableCell align="right">{row.destinationChain}</StyledTableCell>
-                  <StyledTableCell align="right">29 Sep, 2023</StyledTableCell>
+              {interchainTransactions && interchainTransactions?.length>0 && interchainTransactions.map((row) => {
+                let dateObj = new Date(row?.blockTimestamp * 1000);
+                let formatdate=moment(dateObj).format('MM/DD/YYYY HH:MM');
+                return(
+                <StyledTableRow key={row?.destinationChain} onClick={()=>getDetails(row,formatdate)}>
+                  <StyledTableCell className={"hash"} component="th" scope="row">
+                {truncateString(row?.hash,16)}
+                <span class="tooltiptext">{row?.hash}</span>
+                  </StyledTableCell>
+                  <StyledTableCell className={"hash"} align="right">{truncateString(row?.transactionHash,16)}
+                  <span class="tooltiptext">{row?.transactionHash}</span>
+                  </StyledTableCell>
+                  <StyledTableCell align="right">{row?.origin}</StyledTableCell>
+                  <StyledTableCell align="right">{row?.dest}</StyledTableCell>
+                  <StyledTableCell align="right">{formatdate}</StyledTableCell>
                 </StyledTableRow>
-              ))}
+              )}
+              )}
             </TableBody>
           </Table>
         </TableContainer>
